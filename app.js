@@ -70,11 +70,11 @@ class Partner {
         return this.pack2;
     }
 
-    set Pack1(value) {
+    set sPack1(value) {
         this._pack1 = value;
     }
 
-    set Pack2(value1) {
+    set sPack2(value1) {
         this._pack2 = value1;
       }
 
@@ -102,32 +102,35 @@ io.sockets.on('connection', function(socket){
 
 
     var last_element = PARTNERS_LIST[PARTNERS_LIST.length - 1];
-    if (last_element== null){
+    if (last_element == null){
         PARTNERS_LIST[0] = new Partner(newPack, null);
         partnerId = 0;
         numPack = 0;
     }
-    else if (last_element.Pack2 == null){
+    else if (last_element.pack2 == null){
         PARTNERS_LIST[PARTNERS_LIST.length-1].pack2 = newPack;
         partnerId = PARTNERS_LIST.length-1;
         numPack = 1;
     }
     else {
-        PARTNERS_LIST[PARTNERS_LIST.length] =new Partner(newPack, null);
         partnerId = PARTNERS_LIST.length;
+        PARTNERS_LIST[PARTNERS_LIST.length] =new Partner(newPack, null);
+       
         numPack = 0;
     }
 
    
     socket.on('disconnect',function(){
-        delete SOCKET_LIST[socket.id];
-        delete PLAYER_LIST[socket.id];
         if (numPack==0){
             PARTNERS_LIST[partnerId].pack1 = null;
         }
-        if (numPack==1){
+        else if (numPack==1){
             PARTNERS_LIST[partnerId].pack2 = null;
         }
+
+        delete SOCKET_LIST[socket.id];
+        delete PLAYER_LIST[socket.id];
+       
         
         
     });
